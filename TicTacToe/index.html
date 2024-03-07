@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    body{
+        background-color: rgba(19, 19, 19, 0.959);
+    }
+    #game{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 3px;
+        width: 300px;
+        margin: 100px auto;
+    }
+    .game-box{
+        color: white;
+        font-size: 50px;
+        font-weight: 700;
+        height: 100px;
+        width: 100px;
+        background-color: transparent;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 0 5px #002fff, 0 0 10px #002fff, 0 0 15px #002fff;
+    }
+    .btn{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    button{
+      
+        background-color: white;
+        color: blue;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        padding: 16px 28px;
+        font-size: 2rem;
+        filter: drop-shadow(0 0 5px #ff0000) drop-shadow(0 0 10px #ff0000) drop-shadow(0 0 15px #ff0000);
+
+    }
+    .game-class-o{
+        filter: drop-shadow(0 0 5px #002fff) drop-shadow(0 0 10px #002fff) drop-shadow(0 0 15px #002fff);
+    }
+    .game-class{
+        filter: drop-shadow(0 0 5px #ff0000) drop-shadow(0 0 10px #ff0000) drop-shadow(0 0 15px #ff0000);
+    }
+
+    </style>
+</head>
+<body>
+    <section id="game">
+        <div class="game-box" onclick="playGame(0,0)"><h2 class="game-class">X</h2>
+            
+        </div>
+        <div class="game-box" onclick="playGame(0,1)"><h2 class="game-class-o">O</h2>
+        </div>
+        <div class="game-box" onclick="playGame(0,2)"><h2 class="game-class-o">O</h2>
+        </div>
+        <div class="game-box" onclick="playGame(1,0)"><h2 class="game-class-o">O</h2>
+        </div>
+        <div class="game-box" onclick="playGame(1,1)"><h2 class="game-class-o">O</h2>
+        </div>
+        <div class="game-box" onclick="playGame(1,2)"><h2 class="game-class">X</h2>
+        </div>
+        <div class="game-box" onclick="playGame(2,0)"><h2 class="game-class">X</h2>
+        </div>
+        <div class="game-box" onclick="playGame(2,1)"><h2 class="game-class"></h2>
+        </div>
+        <div class="game-box" onclick="playGame(2,2)"><h2 class="game-class-o">O</h2>
+        </div>
+    </section>
+    <div class="btn">
+        <button onclick="resetGame()"> Reset</button>
+</div>
+   <script>
+        let board = [
+            ['','',''],
+            ['','',''],
+            ['','','']
+        ];
+
+        currentPlayer = 'X'
+        function playGame(row,col){
+            if(board[row][col]==''){
+                board[row][col] = currentPlayer;
+                document.getElementById('game').children[row*3+col].innerText = currentPlayer;
+
+                if(checkWinner()){
+                    alert('Player '+currentPlayer+' wins');
+                    resetGame();
+                }else if(checkDraw()){
+                    alert('Draw');
+                    resetGame();
+                }else{
+                    if(currentPlayer=='X'){
+                        currentPlayer = 'O';
+                    }else{
+                        currentPlayer = 'X';
+                    }
+            }
+
+            }
+
+        }
+
+        function checkWinner(){
+            for(let i=0; i<3; i++){
+                if(board[i][0] === board[i][1] && board[i][1]===board[i][2] && board[i][0]!==''){
+                    return true;
+                }
+                if(board[0][i] === board[1][i] && board[1][i]===board[2][i] && board[0][i]!==''){
+                    return true;
+                }
+            }
+            if(board[0][0] === board[1][1] && board[1][1]===board[2][2] && board[0][0]!=''){
+                return true;
+            }
+            if(board[0][2] === board[1][1] && board[1][1]===board[2][0] && board[0][2]!=''){
+                return true;
+            }
+        }
+
+        function checkDraw(){
+            for(let i=0; i<3; i++){
+                for(let j=0; j<3; j++){
+                    if(board[i][j]==''){
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        function resetGame(){
+            board = [
+            ['','',''],
+            ['','',''],
+            ['','','']
+        ];
+
+        currentPlayer = 'X'
+        for(let i=0; i<3; i++){
+            for(let j=0; j<3; j++){
+                document.getElementById('game').children[i*3+j].innerText = '';
+            }
+        
+        }
+    }
+
+   </script>
+</body>
+</html>
