@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body{
+            background-color: rgb(121, 115, 115);
+        }
+        img{
+            width: 600px;
+            aspect-ratio: 16/9;
+            object-fit: contain;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        h2{
+            position: absolute;
+            left: 50%;
+            top: 35%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 8rem;
+        }
+
+      
+    </style>
+</head>
+<body>
+    <img src="clock.png" alt="">
+    <h2 id="clockTime"></h2>
+   <script>
+        let clockTime = document.getElementById('clockTime');
+
+        setInterval(function(){
+            let date = new Date();
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+            let seconds = date.getSeconds();
+            let time = hours + ":" + minutes + ":" + seconds;
+            clockTime.innerText = time;
+        }, 1000)
+   </script>
+</body>
+</html>
