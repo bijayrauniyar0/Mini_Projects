@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman</title>
+    <style>
+        body{
+            background-image: url(bg-hangman.jpg);
+            background-size: cover;
+            background-repeat: none;
+        }
+        #game{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 0;
+            /* height: 100vh; */
+        }
+        #char{
+            width: 80px;
+            padding: 20px 10px;
+            font-size: 3rem;
+            margin: 10px;
+            border-radius: 7px;
+            border: 2px solid #000;
+            background-color: rgba(255, 255, 255, 0.199);
+            backdrop-filter: blur(7px);
+        }
+        #check{
+            background-color: blue;
+            color: white;
+            padding: 20px 30px;
+            border: none;
+            border-radius: 7px;
+            font-size: 3rem;
+            font-weight: 700;
+        }
+        .hang-box{
+            /* display: flex;
+            justify-content: center;
+            align-items: center; */
+            margin-top: 50px;
+            width: 400px;
+            height: 400px;
+            border-radius: 7px;
+            background-color: rgba(255, 255, 255, 0.212);
+            backdrop-filter: blur(5px);
+            border: 2px solid black;
+            animation: glowing 1s  alternate infinite ease-in-out;
+            overflow: hidden;
+
+        }
+        .face{
+            border-radius: 50%;
+            /* background-color: #000; */
+            border: 5px solid black;
+            width: 70px;
+            height: 70px;
+            margin: 20px auto 0;
+            opacity: 0; transition: 0.3s ease-in-out;
+        }
+        .backbone{
+            width: 7px;
+            height: 170px;
+            background-color: #000;
+            border: 2px solid black;
+            margin: 0 auto;
+            opacity: 0; transition: 0.3s ease-in-out;
+
+        }
+        .hand1{
+            width: 5px;
+            height: 70px;
+            background-color: #000;
+            border: 2px solid black;
+            position: relative;
+            bottom: 170px;
+            left: 170px;
+            transform: rotate(45deg);
+            opacity: 0; transition: 0.3s ease-in-out;
+        }
+        .hand2{
+            width: 5px;
+            height: 70px;
+            background-color: #000;
+            border: 2px solid black;
+            position: absolute;
+            top: 100px;
+            /* bottom: 170px; */
+            right: 170px;
+            transform: rotate(135deg);
+            opacity: 0; transition: 0.3s ease-in-out;
+        }
+        .foot1{
+            width: 5px;
+            height: 70px;
+            background-color: #000;
+            border: 2px solid black;
+            position: relative;
+            bottom: 90px;
+            left: 170px;
+            transform: rotate(45deg);
+            opacity: 0; transition: 0.3s ease-in-out;
+        }
+        .foot2{
+            width: 5px;
+            height: 70px;
+            background-color: #000;
+            border: 2px solid black;
+            position: absolute;
+            bottom: 76px;
+            /* bottom: 170px; */
+            right: 170px;
+            transform: rotate(135deg);
+            opacity: 0; transition: 0.3s ease-in-out;
+        }
+        #box-container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 50px;
+        }
+        .char-box{
+            width: 100px;
+            height: 100px;
+            border-radius: 7px;
+            border: 3px solid #000;
+            background-color: rgba(255, 255, 255, 0.158);
+            backdrop-filter: blur(5px);
+            margin: 0 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+        }
+        .game.active{
+            animation: slider .5s linear forwards;
+        }
+        .hang-man.active{
+            animation: slider .5s linear forwards;
+        }
+        #gameover,#gamewon{
+            position: absolute;
+            transform: translate(-50%, -50%);
+            left: 50%;
+            top: 50%;
+            font-size: 6rem;
+            opacity: 0; transition: 0.3s ease-in-out;
+            
+        }
+        @keyframes glowing{
+            0%{
+                box-shadow: 0 0 10px rgba(255, 0, 0, 0.247);
+            }
+            /* 50%{
+                box-shadow: 0 0 20px  rgba(255, 255, 255, 0.459);
+            } */
+            100%{
+                box-shadow: 0 0 30px rgb(255, 0, 0);
+            }
+        }
+        @keyframes slider{
+            0%{
+                transform: translateY(0);
+            }
+            100%{
+                transform: translateY(100%);
+            }
+        }
+
+    </style>
+</head>
+<body id="body">
+    <h2 id="gameover">Game Over</h2>
+    <h2 id="gamewon">You won the game</h2>
+    <section id="game" class="game">
+        <div class="check-group">
+            <input type="text" id="char" minlength="1" maxlength="1">
+            <button id="check" onclick="checkChar()">Check</button>
+        </div>
+        <div class="hang-box" id="hang-box">
+            <div class="hang-man">
+                <div class="face"></div>
+                <div class="backbone"></div>
+                <div class="hand1"></div>
+                <div class="hand2"></div>
+                <div class="foot1"></div>
+                <div class="foot2"></div>
+            </div>
+        </div>
+        <div id="box-container">
+
+        </div>
+    </section>
+    <script>
+        let char = document.getElementById('char');
+        let check = document.getElementById('check');
+        let hangBox = document.getElementById('hang-box');
+        // let face = document.querySelector('.face');
+        // let backbone = document.querySelector('.backbone');
+        // let hand1 = document.querySelector('.hand1');
+        // let hand2 = document.querySelector('.hand2');
+        // let foot1 = document.querySelector('.foot1');
+        // let foot2 = document.querySelector('.foot2');
+        let boxContainer = document.getElementById('box-container');
+
+        word1= "LoopVerse"
+        word = word1.toUpperCase();
+
+        
+
+        for(let i =0; i<word.length; i++){
+            let charBox = document.createElement('div');
+            charBox.classList.add('char-box');
+            boxContainer.appendChild(charBox);
+        }
+        function checkChar(){
+            let hangArr = Array.from(document.querySelectorAll('.hang-box>div>div'));
+            let charValue = char.value.toUpperCase();
+            let textArr= Array.from(document.querySelectorAll('#box-container .char-box'));
+            if(word.includes(charValue)){
+                for(let i = 0; i<word.length; i++){
+                    if(word[i] === charValue){
+                        textArr[i].innerText = charValue;
+                    }
+                }
+            }else{
+                console.log("I am in else statement")
+                for(let i = 0; i<hangArr.length; i++){
+                    if(window.getComputedStyle(hangArr[i]).opacity === '0'){
+                        hangArr[i].style.opacity = '1';
+                        if(hangArr[5].style.opacity==='1'){
+                            document.querySelector('.hang-man').classList.add('active');
+                            setTimeout(()=>{
+                                document.getElementById('body').style.overflow= 'hidden'
+                                document.querySelector('.game').classList.add('active');
+                                document.getElementById('gameover').style.opacity = '1';
+
+                            }, 700)
+                           
+                        }
+                        break;
+                    }
+                }
+
+            }
+            checkWin();
+        }
+        
+        function checkWin(){
+            if(Array.from(document.querySelectorAll('#box-container .char-box')).every((el)=>el.innerText !== '')){
+                document.getElementById('body').style.overflow= 'hidden'
+                document.querySelector('.game').classList.add('active');
+                document.getElementById('gamewon').style.opacity = '1';
+            }
+        }
+        
+    </script>
+</body>
+</html>
