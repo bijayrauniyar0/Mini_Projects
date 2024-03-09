@@ -8,7 +8,7 @@
         body{
             background-image: url(bg-hangman.jpg);
             background-size: cover;
-            background-repeat: none;
+            background-repeat: no-repeat;
         }
         #game{
             display: flex;
@@ -133,7 +133,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 3rem;
+            font-size: 4rem;
+            font-weight: 800;
+            animation: glowing1 1s  alternate infinite ease-in-out;
+            text-shadow: 0 0 10px rgb(255, 0, 0),0 0 20px rgb(255, 0, 0),0 0 30px rgb(255, 0, 0);
         }
         .game.active{
             animation: slider .5s linear forwards;
@@ -159,6 +162,17 @@
             } */
             100%{
                 box-shadow: 0 0 30px rgb(255, 0, 0);
+            }
+        }
+        @keyframes glowing1{
+            0%{
+                box-shadow: 0 0 10px rgba(0, 255, 234, 0.247);
+            }
+            /* 50%{
+                box-shadow: 0 0 20px  rgba(255, 255, 255, 0.459);
+            } */
+            100%{
+                box-shadow: 0 0 30px rgb(0, 255, 234);
             }
         }
         @keyframes slider{
