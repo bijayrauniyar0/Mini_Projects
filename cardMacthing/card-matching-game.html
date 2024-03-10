@@ -1,0 +1,275 @@
+al<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        #match-main{
+            width: 100%;
+            /* height: 100vh; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        body{
+            /* background-color: black; */
+            overflow-x: hidden;
+        }
+        .grid{
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-gap: 12px;
+            padding: 60px 40px;
+            margin: 0 auto;
+            background-color: white;
+        }
+        .card{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height:300px;
+            width: 300px;
+            background-color: beige;
+            border-radius: 7px;
+            margin: 20px 5px;
+            animation: glowing 1s alternate infinite;
+            color: transparent;
+            cursor: pointer;
+            
+        }
+        .card.flip.active{
+            animation: winner 1s linear 3;
+
+        }
+        .card img{
+            display: none;
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+            aspect-ratio: 1/1;
+        }
+        .card.flip{
+            background-color: white;
+            color: black;
+            animation: glowing1 1s alternate infinite;
+        }
+        .card.flip img{
+            display: block;
+        }
+        .winner{
+            text-align: center;
+            margin-top: 100px;
+            font-size: 3rem;
+            /* display: none; */
+            animation: glowing2 1s alternate infinite;
+        }
+        .btn{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            top: 120px;
+        }
+        #play-again{
+            background-color: blue;
+            border: none;
+            border-radius: 7px;
+            color: white;
+            padding: 15px 20px;
+            font-size: 2rem;
+        }
+        /* responsive */
+        /* @media (min-width:1280px){
+            body .grid{
+                grid-template-columns: repeat(6, 1fr);
+                gap: 7px;
+                width: 100%;
+                
+            }
+            .card{
+                width: 240px;
+                height: 240px;
+            }
+        } */
+        @media (max-width:992px){
+            body .grid{
+                grid-template-columns: repeat(6, 1fr);
+                gap: 7px;
+                width: 100%;
+                
+            }
+        }
+        @media (max-width:768px){
+            body .grid{
+                grid-template-columns: repeat(4, 1fr);
+                gap: 7px;
+                width: 100%;
+                
+            }
+            .grid .card{
+                width: 80px;
+                height: 80px;
+            }
+        }
+        @media (max-width:576px){
+            body .grid{
+                grid-template-columns: repeat(4, 1fr);
+                gap: 7px;
+                width: 100%;
+                
+            }
+            .grid .card{
+                width: 60px;
+                height: 60px;
+            }
+        }
+        @keyframes glowing{
+            0%{
+                box-shadow: 0 0 10px #ff000011,
+                0 0 20px #ff000011,
+                0 0 30px #ff000011;
+            }
+            100%{
+                box-shadow: 0 0 10px #ff0000,
+                0 0 20px #ff0000,
+                0 0 30px #ff0000;
+            }
+        }
+        @keyframes glowing1{
+            0%{
+                box-shadow: 
+                0 0 10px rgba(0, 0, 255, 0.144),
+                0 0 20px rgba(0, 0, 255, 0.144),
+                0 0 30px rgba(0, 0, 255, 0.144);
+            }
+            100%{
+                box-shadow: 0 0 10px blue,
+                0 0 20px blue,
+                0 0 30px blue;
+            }
+        }
+        @keyframes glowing2{
+            0%{
+                filter:
+                drop-shadow(0 0 10px rgba(0, 153, 255, 0.144))
+                drop-shadow(0 0 20px rgba(0, 153, 255, 0.144))
+                drop-shadow(0 0 30px rgba(0, 153, 255, 0.144));
+                
+            }
+            100%{
+               filter: 
+               drop-shadow(0 0 10px rgb(0, 153, 255))
+                drop-shadow(0 0 20px rgb(0, 153, 255))
+                drop-shadow(0 0 30px rgb(0, 153, 255));
+            }
+        }
+        @keyframes winner{
+            0%{
+                background-color: black;
+                transform: rotate(45deg);
+            }
+            50%{
+                background-color: white;
+                transform: rotate(0deg);
+
+            }
+            100%{
+                background-color: black;
+                transform: rotate(45deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- <h1 class="winner">Congrats! You Won</h1> -->
+    <!-- <span class="btn">
+        <button id="play-again">Play Again</button>
+    </span> -->
+    <section id="match-main">
+        <div class="grid">
+        </div>
+    </section>
+
+
+    <script>
+        const grid = document.querySelector('.grid');
+        
+        cardArr1 = ['angular.png', 'bootstrap.png','chash.png', 'cpp.png','html.png','css.png','node.png','js.png','php.png','python.png','ruby.png','vscode.png'];
+        cardArr = [...cardArr1, ...cardArr1].sort(() => Math.random() - 0.5);
+        console.log(cardArr);
+        
+        for(let i = 0; i < cardArr.length; i++){
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.innerHTML = `<img class = "card-img" src ="assets/images/${cardArr[i]}">`;
+            card.value = cardArr[i];
+            card.addEventListener('click', flipCard);
+            grid.appendChild(card);
+        }
+
+       let firstCard, secondCard;
+       let count= 0;
+
+       let cards = Array.from( document.getElementsByClassName('card'))
+       let cardImg = Array.from(document.getElementsByClassName('card-img'))
+       function flipCard(){
+            this.classList.add('flip');
+            if(!firstCard){
+                firstCard = this;
+            }else{
+                secondCard = this;
+            }
+          if(firstCard && secondCard){
+                if(firstCard.value === secondCard.value){
+                    firstCard.removeEventListener('click', flipCard);
+                    secondCard.removeEventListener('click', flipCard);
+                    count +=2;
+                    firstCard = null;
+                    secondCard = null;
+                    checkWinner()
+                    return;
+                }else{
+                    setTimeout(() => {
+                        firstCard.classList.remove('flip');
+                        secondCard.classList.remove('flip');
+                        firstCard = null;
+                        secondCard = null;
+                    }, 500);
+                    
+                }
+                
+            }
+            return;
+          }
+
+          
+          function checkWinner(){
+                if(count === cardArr.length){
+                    let prsm = new Promise((resolve, reject) => {
+                        
+                        for(let i = 0; i < cards.length; i++){
+                            cards[i].classList.add('active')
+                        }
+                        setTimeout(() => {
+                            resolve(true)
+                        },2000)
+                    })
+                    prsm.then(() => {
+                            for(let i = 0; i < cards.length; i++){
+                                cards[i].style.display = "none"
+                            }
+                            document.querySelector('.winner').style.display = "block"
+                            document.querySelectorAll('.card').display= "none"
+                    })    
+                }
+          }
+    </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minsweeper</title>
+    <style>
+        .body.active{
+            background-color: rgb(231, 70, 41);
+        }
+        #game{
+            margin-top: 10%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .grid{
+            /* width: 100%; */
+            display: grid;
+            grid-template-columns: repeat(10, 60px);
+            padding: 60px 40px;
+        }
+        .box{
+            width: 60px;
+            height: 60px;
+            background-color: rgb(170, 170, 170);
+            border: 2px solid black;
+            border-radius: 5px;
+            font-size: 2.2rem;
+        }
+        #bomb{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.2rem;
+            opacity: 0;
+        }
+        .bomb.rotate{
+            animation: rotate .5s linear 3;
+        }
+        .bomb.active{
+            animation: explode 0.8s linear;
+        }
+        @keyframes explode{
+            0%{
+                transform: scale(10);
+                opacity: 1;
+            }
+            100%{
+                transform: opacity(0);
+            }
+        }
+        @keyframes rotate{
+            0%{
+                transform: rotate(0deg);
+            }
+            100%{
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body class="body">
+    <section id="game">
+        <div class="grid">
+
+        </div>
+    </section>
+    <script>
+        const grid = document.querySelector('.grid');
+
+        for(let i=0; i<80; i++){
+            const cell = document.createElement('div');
+            cell.classList.add('box');
+            cell.addEventListener('click', checkBomb)
+            grid.appendChild(cell);
+        }
+
+        let box = Array.from(document.querySelectorAll('.box'));
+        for(let i=0; i<80; i++){
+            randomIndex = Math.floor(Math.random() * 80);
+            box[randomIndex].innerHTML = '<span id="bomb" class="bomb">💣</span>'
+            box[randomIndex].value = 'bomb'
+            console.log(randomIndex)
+        }
+
+        let bomb = Array.from(document.querySelectorAll('#bomb'));
+        let count = 0;
+        function checkBomb(){
+            if(this.value === "bomb"){
+                console.log('Game Over');
+                for(let i=0; i<bomb.length; i++){
+                    bomb[i].style.opacity = 1;
+                    setTimeout(()=>{
+                        bomb[i].classList.add('rotate');
+                        setTimeout(()=>{
+                            bomb[i].classList.add('active');
+    
+                        },1600)
+                    },200)
+                }
+                for(let i=0; i<box.length; i++){
+                   if(box[i].value === 'bomb'){
+                    box[i].style.backgroundColor = "rgb(243, 29, 29)"
+                    setTimeout(()=>{
+                       document.querySelector('.body').classList.add('active')
+                    },1600)
+                    
+                   }
+                }
+
+            }else{
+                this.style.backgroundColor = 'rgb(214, 214, 214)';
+                this.innerHTML = "🤥"
+                this.value = 'safe'
+                count++
+                this.removeEventListener('click', checkBomb);
+                checkWinner()
+            }
+        }
+        function checkWinner(){
+            if(count == (box.length-bomb.length)){
+                setTimeout(()=>{
+                    alert("Vai Tu Jitgaya")
+                },300)
+            }
+        }
+    </script>
+</body>
+</html>
