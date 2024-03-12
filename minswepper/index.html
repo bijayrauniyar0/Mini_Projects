@@ -77,7 +77,7 @@
         }
 
         let box = Array.from(document.querySelectorAll('.box'));
-        for(let i=0; i<80; i++){
+        for(let i=0; i<30; i++){
             randomIndex = Math.floor(Math.random() * 80);
             box[randomIndex].innerHTML = '<span id="bomb" class="bomb">💣</span>'
             box[randomIndex].value = 'bomb'
